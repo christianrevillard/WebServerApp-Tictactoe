@@ -16,10 +16,10 @@ var CreTictactoe = CreTictactoe || {};
 
 CreTictactoe.onload = function ()
 {		
-	// openshift websocket on 8000 or secure on 8443 - must configurable !!!	
-	var socket = io("http://nodejs-creweb.rhcloud.com:8000/tictactoe");
-	// local version
-	//var socket = io("/tictactoe");
+	var socket = 
+		window.location.href.indexOf('rhcloud.com')>-1?
+	    io("http://nodejs-creweb.rhcloud.com:8000/tictactoe"):
+		io("/tictactoe");
 	 		
 	var theCanvas = document.getElementById('theCanvas');
 	var txtArea = document.getElementById('txtArea');
