@@ -46,7 +46,7 @@ var startApplication = function(socketName) {
 var TicTacToeGame = function(tictactoe, socket, gameName){
 	var game = this;
 	
-	this.controller = new serverController.Controller(tictactoe, gameName)
+	this.controller = new serverController.Controller(tictactoe, gameName, true)
 	this.controller.addSocket(socket);	
 	this.playerX = socket.id;	
 	this.controller.emitToSocket(socket.id, 'textMessage', {message:'New game, you are X'});
