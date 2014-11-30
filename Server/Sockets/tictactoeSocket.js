@@ -1,7 +1,3 @@
-
-
-
-
 // some stuff to extract to a twoPlayersGame/turnGame base class?
 var serverController = require('../../CreanvasNodeModule/ServerController');
 
@@ -59,7 +55,7 @@ var TicTacToeGame = function(tictactoe, socket, gameName){
 		game.blockedO = false;
 		game.controller.applicationInstanceEmit('textMessage',  {message:'X has played !'});
 		game.controller.emitToSocket(game.playerO, 'textMessage',  {message:'Your turn !'});
-		game.currentPlayer.update('elementY', 325);
+		game.currentPlayer.position.y = 325;
 		game.checkWin('X');
 	};
 
@@ -68,35 +64,36 @@ var TicTacToeGame = function(tictactoe, socket, gameName){
 		game.blockedX = false;
 		game.controller.applicationInstanceEmit('textMessage',  {message:'O has played !'});
 		game.controller.emitToSocket(game.playerX, 'textMessage',  {message:'Your turn !'});
-		game.currentPlayer.update('elementY',150);
+		game.currentPlayer.position.y = 150;
 		game.checkWin('O');
 	};
 
-	this.controller.addElement
-	(
-		["name", "Xsource"],
-		["image", { "width":150,"height":150, "typeName": 'X'}],
-		["position", {"x": 600, "y": 150, "angle": Math.PI / 4}],			
-		["duplicable", {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedX || originSocketId != game.playerX;}}],
-		["droppable", {ondrop: game.ondropX}],
-		["moving", {rotationSpeed: Math.PI / 16}]
-	);
+	this.controller.addElement({
+		name: 'Xsource',
+		typeName: 'X',
+		box: {width:150, height:150},
+		position: {x: 600, y: 150, angle: Math.PI / 4},
+		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedX || originSocketId != game.playerX;}},
+		droppable: {onDrop: game.ondropX},
+		moving: {speed: {angle:Math.PI / 16}}
+	});
 
-	this.currentPlayer = this.controller.addElement
-	(
-		["name", "currentPlayer"],
-		["image", { "width":150,"height":150, "typeName": 'currentPlayer'}],
-		["position", {"x": 600, "y": 150, "z":-100}]
-	);
+	this.currentPlayer = this.controller.addElement ({
+		name: 'currentPlayer',
+		typeName: 'currentPlayer',
+		box: { width:150, height:150},
+		position: {x: 600, y: 150, z:-100}
+	});
 
 	var tttCase = function(x,y)
 	{
-		return game.controller.addElement(
-			["name", 'case(' + x + ',' + y + ')'],
-			["image", { "top":0, "left":0, "width":150, "height":150, "typeName":'case'}],
-			["position", { x: 100 + x*150, y: 100 + y*150, z:-100 }],
-			["dropzone", { dropX: 100 + x*150, dropY: 100 + y*150, availableSpots:1 }] 
-		);
+		return game.controller.addElement({
+				name: 'case(' + x + ',' + y + ')',
+				typeName: 'case',
+				box: {width:150, height:150, top:0, left:0 },
+				position: {x: 100 + x*150, y: 100 + y*150, z:-100 },			
+				dropZone: {dropX: 100 + x*150, dropY: 100 + y*150, availableSpots:1 } 
+		});
 	};
 					
 	this.cases = [];
@@ -115,9 +112,9 @@ TicTacToeGame.prototype.checkWin = function(typeName){
 	var played = [];
 	
 	for (var i = 0; i<3; i++) { for (var j = 0; j<3; j++) {		
-		if (this.cases[i][j].droppedElementsList.length>0 && this.cases[i][j].droppedElementsList[0].typeName == typeName)
+		if (this.cases[i][j].dropZone.droppedElements.length>0 && this.cases[i][j].dropZone.droppedElements[0].typeName == typeName)
 		{
-			played.push({i:i, j:j, dropped: this.cases[i][j].droppedElementsList[0]});
+			played.push({i:i, j:j, dropped: this.cases[i][j].dropZone.droppedElements[0]});
 		}
 	}}
 	
@@ -130,22 +127,23 @@ TicTacToeGame.prototype.checkWin = function(typeName){
 		for(var k=0; k<3; k++)
 		{
 			played[k].dropped.controller.addElement
-			(
-				["name", "winner"],
-				["image", { "width":150,"height":150, "typeName": 'currentPlayer'}],
-				["position", {"x": played[k].dropped.elementX, "y": played[k].dropped.elementY, "z":-50}]
-			);
+			({
+				name: 'winner',
+				typeName: 'currentPlayer',
+				box: {width:150, height:150},
+				position: {x: played[k].dropped.position.x, y: played[k].dropped.position.y, z:-50}
+			});
 		}
 		}
 		else
 		{
 			for(var k=0; k<3; k++)
 			{
-				played[k].dropped.update('typeName', 'XWin');
+				played[k].dropped.typeName = 'XWin';
 			}
 			
 		}
-		this.currentPlayer.update('elementY', typeName=='X'?150:325);
+		this.currentPlayer.y = typeName=='X'?150:325;
 		this.controller.applicationInstanceEmit('textMessage',  {message:typeName + ' has won !!!'});
 		this.blockedX = true;
 		this.blockedO = true;
@@ -161,37 +159,35 @@ TicTacToeGame.prototype.join = function(socket){
 	this.playerO = socket.id;
 
 	this.controller.elements.forEach(function(e){ 
-		e.fullUpdate();
+		// force Update
+		e.previousClientData  = null;
 	});
 	
-	this.controller.addElement
-	(
-		["name", "Osource"],
-		["image", { "width":150,"height":150, "typeName": 'O'}],
-		["position", {"x": 600, "y": 325, "scaleX": 0.8, "scaleY": 1.2}],			
-		["duplicable", {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedO || originSocketId != game.playerO;}}],
-		["droppable", {ondrop: game.ondropO}],
-		["moving", {}],
-		["customTimer", {
+	this.controller.addElement ({
+		name: 'Osource',
+		typeName: 'O',
+		box:  { width:150, height:150, },
+		position:  {x: 600, y: 325, scale : {x: 0.8, y: 1.2}},			
+		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedO || originSocketId != game.playerO;}},
+		droppable:  {onDrop: game.ondropO},
+		moving: {},
+		customTimer: {
 		  	  "time": 50, //ms
 			  "action": function()
-			  {
-				  this.elementScaleSpeed = this.elementScaleSpeed || {x:0.1,y:-0.1};
-				  
-				  if (this.elementScaleX>1.2)
+			  {				  
+				  if (this.scale.x>=1.2)
 				  {
-					  this.elementScaleSpeed.x = -0.6;
-					  this.elementScaleSpeed.y = +0.6;
+					  this.moving.scaleSpeed.x = -0.6;
+					  this.moving.scaleSpeed.y = +0.6;
 				 }
-				  else if (this.elementScaleX<0.8)
+				  else if (this.scale.x<=0.8)
 				  {
-					  this.elementScaleSpeed.x = 0.6;
-					  this.elementScaleSpeed.y = -0.6;
+					  this.moving.scaleSpeed.x = 0.6;
+					  this.moving.scaleSpeed.y = -0.6;
 				  }
-				  
 			  }		
-		}]
-	);
+		}
+	});
 };
 
 exports.startApplication = startApplication;
