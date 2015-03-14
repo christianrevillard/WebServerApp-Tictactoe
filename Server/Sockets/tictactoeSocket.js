@@ -70,7 +70,7 @@ var TicTacToeGame = function(tictactoe, socket, gameName){
 
 	this.controller.addElement({
 		name: 'Xsource',
-		typeName: 'X',
+		clientType: 'X',
 		box: {width:150, height:150},
 		position: {x: 600, y: 150, angle: Math.PI / 4},
 		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedX || originSocketId != game.playerX;}},
@@ -80,7 +80,7 @@ var TicTacToeGame = function(tictactoe, socket, gameName){
 
 	this.currentPlayer = this.controller.addElement ({
 		name: 'currentPlayer',
-		typeName: 'currentPlayer',
+		clientType: 'currentPlayer',
 		box: { width:150, height:150},
 		position: {x: 600, y: 150, z:-100}
 	});
@@ -89,7 +89,7 @@ var TicTacToeGame = function(tictactoe, socket, gameName){
 	{
 		return game.controller.addElement({
 				name: 'case(' + x + ',' + y + ')',
-				typeName: 'case',
+				clientType: 'case',
 				box: {width:150, height:150, top:0, left:0 },
 				position: {x: 100 + x*150, y: 100 + y*150, z:-100 },			
 				dropZone: {dropX: 100 + x*150, dropY: 100 + y*150, availableSpots:1 } 
@@ -112,7 +112,7 @@ TicTacToeGame.prototype.checkWin = function(typeName){
 	var played = [];
 	
 	for (var i = 0; i<3; i++) { for (var j = 0; j<3; j++) {		
-		if (this.cases[i][j].dropZone.droppedElements.length>0 && this.cases[i][j].dropZone.droppedElements[0].typeName == typeName)
+		if (this.cases[i][j].dropZone.droppedElements.length>0 && this.cases[i][j].dropZone.droppedElements[0].clientType == typeName)
 		{
 			played.push({i:i, j:j, dropped: this.cases[i][j].dropZone.droppedElements[0]});
 		}
@@ -129,7 +129,7 @@ TicTacToeGame.prototype.checkWin = function(typeName){
 			played[k].dropped.controller.addElement
 			({
 				name: 'winner',
-				typeName: 'currentPlayer',
+				clientType: 'currentPlayer',
 				box: {width:150, height:150},
 				position: {x: played[k].dropped.position.x, y: played[k].dropped.position.y, z:-50}
 			});
@@ -139,7 +139,7 @@ TicTacToeGame.prototype.checkWin = function(typeName){
 		{
 			for(var k=0; k<3; k++)
 			{
-				played[k].dropped.typeName = 'XWin';
+				played[k].dropped.clientType = 'XWin';
 			}
 			
 		}
@@ -165,7 +165,7 @@ TicTacToeGame.prototype.join = function(socket){
 	
 	this.controller.addElement ({
 		name: 'Osource',
-		typeName: 'O',
+		clientType: 'O',
 		box:  { width:150, height:150, },
 		position:  {x: 600, y: 325, scale : {x: 0.8, y: 1.2}},			
 		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedO || originSocketId != game.playerO;}},

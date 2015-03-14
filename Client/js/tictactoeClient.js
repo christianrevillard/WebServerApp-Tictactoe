@@ -26,7 +26,7 @@ CreTictactoe.onload = function ()
 
 	var controller = new CreJs.CreanvasNodeClient.NodeJsController({
 		"nodeSocket":socket,
-		"lengthScale":0.75,
+		"lengthScale":1,
 		"canvas":theCanvas
 		//"log": new CreJs.Crelog.Logger().logMessage,
 		});
