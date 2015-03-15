@@ -68,10 +68,14 @@ var TicTacToeGame = function(tictactoe, socket, gameName){
 		game.checkWin('O');
 	};
 
-	this.controller.addElement({
+
+	this.controller.addAxeAlignedBox({
 		name: 'Xsource',
 		clientType: 'X',
-		box: {width:150, height:150},
+		left:0,
+		right:700,
+		top:0,
+		bottom:20,
 		position: {x: 600, y: 150, angle: Math.PI / 4},
 		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedX || originSocketId != game.playerX;}},
 		droppable: {onDrop: game.ondropX},
@@ -163,10 +167,13 @@ TicTacToeGame.prototype.join = function(socket){
 		e.previousClientData  = null;
 	});
 	
-	this.controller.addElement ({
+	this.controller.addAxeAlignedBox({
 		name: 'Osource',
 		clientType: 'O',
-		box:  { width:150, height:150, },
+		left:0,
+		right:700,
+		top:0,
+		bottom:20,
 		position:  {x: 600, y: 325, scale : {x: 0.8, y: 1.2}},			
 		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedO || originSocketId != game.playerO;}},
 		droppable:  {onDrop: game.ondropO},
