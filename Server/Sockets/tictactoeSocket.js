@@ -178,7 +178,7 @@ TicTacToeGame.prototype.join = function(socket){
 		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedO || originSocketId != game.playerO;}},
 		droppable:  {onDrop: game.ondropO},
 		moving: {},
-		customTimer: {
+/*		customTimer: {
 		  	  "time": 50, //ms
 			  "action": function()
 			  {				  
@@ -193,7 +193,7 @@ TicTacToeGame.prototype.join = function(socket){
 					  this.moving.scaleSpeed.y = -0.6;
 				  }
 			  }		
-		}
+		}*/
 	});
 };
 
