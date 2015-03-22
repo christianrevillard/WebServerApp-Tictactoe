@@ -18,8 +18,8 @@ CreTictactoe.onload = function ()
 {		
 	var socket = 
 		window.location.href.indexOf('rhcloud.com')>-1?
-	    io("http://nodejs-creweb.rhcloud.com:8000/tictactoe"):
-		io("/tictactoe");
+	    io("http://nodejs-creweb.rhcloud.com:8000/tictactoeOnline/tictactoeSocket"):
+		io("/tictactoeOnline/tictactoeSocket");
 	 		
 	var theCanvas = document.getElementById('theCanvas');
 	var txtArea = document.getElementById('txtArea');

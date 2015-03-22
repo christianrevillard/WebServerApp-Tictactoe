@@ -1,5 +1,5 @@
 // some stuff to extract to a twoPlayersGame/turnGame base class?
-var serverController = require('../../CreanvasNodeModule/ServerController');
+var serverController = require('../../node_modules/creanvas/ServerController');
 
 var games = [];
 
