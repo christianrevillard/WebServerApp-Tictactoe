@@ -1,0 +1,33 @@
+{
+  "name": "TicTacToeOnline",
+  "version": "0.0.0",
+  "description": "Tic tac toe",
+  "keywords": [
+    "Tictactoe",
+    "Online",
+    "two players"
+  ],
+  "author": {
+    "name": "Christian Revillard",
+    "email": "christian.revillard@centraliens.net",
+    "url": "http://www.openshift.com/"
+  },
+  "homepage": "http://www.openshift.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openshift/origin-server"
+  },
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
+  },
+    "dependencies": {
+     "cre-nodejs-server": "1.0.1",
+     "creanvas": "0.0.0"
+    },
+
+  "devDependencies": {},
+  "bundleDependencies": [],
+  "private": true,
+  "main": "index.js"
+}

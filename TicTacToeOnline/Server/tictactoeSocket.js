@@ -1,5 +1,5 @@
 // some stuff to extract to a twoPlayersGame/turnGame base class?
-var serverController = require('../../node_modules/creanvas/ServerController');
+var serverController = require('creanvas').controller;
 
 var games = [];
 
@@ -72,10 +72,10 @@ var TicTacToeGame = function(tictactoe, socket, gameName){
 	this.controller.addAxeAlignedBox({
 		name: 'Xsource',
 		clientType: 'X',
-		left:0,
-		right:700,
-		top:0,
-		bottom:20,
+        left: -150,
+        right: 150,
+        top: -150,
+        bottom: 150,
 		position: {x: 600, y: 150, angle: Math.PI / 4},
 		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedX || originSocketId != game.playerX;}},
 		droppable: {onDrop: game.ondropX},
@@ -170,10 +170,10 @@ TicTacToeGame.prototype.join = function(socket){
 	this.controller.addAxeAlignedBox({
 		name: 'Osource',
 		clientType: 'O',
-		left:0,
-		right:700,
-		top:0,
-		bottom:20,
+		left:-150,
+		right:150,
+		top:-150,
+		bottom:150,
 		position:  {x: 600, y: 325, scale : {x: 0.8, y: 1.2}},			
 		duplicable: {"generatorCount":3, "isBlocked":function(element, originSocketId){return game.blockedO || originSocketId != game.playerO;}},
 		droppable:  {onDrop: game.ondropO},
