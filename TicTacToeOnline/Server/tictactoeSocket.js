@@ -3,46 +3,35 @@ var serverController = require('creanvas').controller;
 
 var games = [];
 
-// called only for the first of all users
-var startApplication = function(socketName) {
-
-	var tictactoe = exports.applicationSocket = socketName;
-
-	console.log('Setting up tictactoe socket ');
-	
-	// called for each user
-	tictactoe.on('connection', function(socket){
-		console.log('user connected: ' + socket.id);
-				
-		socket.on('disconnect', function(){
-			
-			console.log('user disconnected');});
+var onConnection = function (socket) {
+  console.log('user connected: ' + socket.id);
   
-		socket.on('joinGame', function()
-		{
-			if (games.length == 0 || games[games.length-1].playerO)
-			{			
-				console.log('Starting a game' );
-				games.push(new TicTacToeGame(tictactoe, socket, 'game' + games.length));
-			}
-			else
-			{			
-				console.log('Joining a game' );
-				games[games.length-1].join(socket);
-			}
-			
-			socket.on('disconnect', function(){
-				games[games.length-1].controller.applicationInstanceBroadcast(
-					socket, 'textMessage', {message:'He has left !'});
-			});
-		});
-	});
+  socket.on('disconnect', function () {
+    
+    console.log('user disconnected');
+  });
+  
+  socket.on('joinGame', function () {
+    if (games.length == 0 || games[games.length - 1].playerO) {
+      console.log('Starting a game');
+      games.push(new TicTacToeGame(socket, 'game' + games.length));
+    }
+    else {
+      console.log('Joining a game');
+      games[games.length - 1].join(socket);
+    }
+    
+    socket.on('disconnect', function () {
+      games[games.length - 1].controller.applicationInstanceBroadcast(
+        socket, 'textMessage', { message: 'He has left !' });
+    });
+  });
 };
 
-var TicTacToeGame = function(tictactoe, socket, gameName){
+var TicTacToeGame = function(socket, gameName){
 	var game = this;
 	
-	this.controller = new serverController.Controller(tictactoe, gameName, true)
+	this.controller = new serverController.Controller(socket.nsp, gameName, true)
 	this.controller.addSocket(socket);	
 	this.playerX = socket.id;	
 	this.controller.emitToSocket(socket.id, 'textMessage', {message:'New game, you are X'});
@@ -197,5 +186,4 @@ TicTacToeGame.prototype.join = function(socket){
 	});
 };
 
-exports.startApplication = startApplication;
-exports.applicationSocket = null;
+module.exports = onConnection;

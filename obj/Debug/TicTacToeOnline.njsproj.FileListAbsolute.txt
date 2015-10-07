@@ -1,0 +1,2 @@
+C:\Users\Christian\Development\Projects\Apps\TicTacToeOnline\obj\Debug\TicTacToeOnline.njsprojResolveAssemblyReference.cache
+C:\Users\Christian\Development\Projects\Apps\TicTacToeOnline\bin\Microsoft.NodejsTools.WebRole.dll

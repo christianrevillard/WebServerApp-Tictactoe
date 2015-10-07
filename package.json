@@ -22,7 +22,7 @@
     "npm": ">= 1.0.0"
   },
     "dependencies": {
-     "cre-nodejs-server": "1.0.1",
+     "cre-nodejs-server": ">=2.0.0",
      "creanvas": "0.0.0"
     },
 
